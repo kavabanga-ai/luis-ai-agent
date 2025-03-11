@@ -1,0 +1,26 @@
+
+{
+  "dependencies": [
+    "."
+  ],
+  "graphs": {
+    "indexer": "./src/retrieval_graph/index_graph.py:graph",
+    "retrieval_graph": "./src/retrieval_graph/graph.py:graph",
+    "evoclick_demo_graph": "./src/retrieval_graph/demo_evoclick.py:graph",
+    "summarization_graph": "./src/retrieval_graph/summarization_graph.py:graph",
+    "flybot_graph": "./src/flybot_graph/graph.py:graph",
+    "button_gen_graph": "./src/retrieval_graph/button_gen_graph.py:graph",
+    "pop_up_graph": "./src/retrieval_graph/pop_up_graph.py:graph",
+    "luis_bot_dev_graph": "./src/luis_graph/graph.py:graph",
+    "description_product_graph": "./src/description_product_graph/graph.py:graph",
+    "kamilla_graph": "./src/kamilla_graph/graph.py:graph",
+    "luis_bot_graph": "./src/luis_graph/luis_bot_graph.py:graph",
+    "luis_search_graph": "./src/luis_graph/luis_search_graph.py:graph",
+    "example_ru_graph": "./src/example_ru_graph/graph.py:graph",
+    "web_search_graph": "./src/web_search_graph/graph.py:graph",
+    "luis_web_search_graph": "./src/luis_web_search_graph/graph.py:graph",
+    "scriptologevo_graph": "./src/scriptologevo_graph/graph.py:graph"
+  },
+  "env": ".env",
+  "python_version": "3.11"
+}

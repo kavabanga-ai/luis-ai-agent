@@ -1,0 +1,62 @@
+[project]
+name = "indikat-conversation"
+version = "0.0.2"
+description = "Conversation and Training Searver with langgraph"
+authors = [
+    { name = "Shamsuddin Ahmed", email = "info@shamspias.com" },
+]
+license = { text = "Indikat" }
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=0.2.34",
+    "langchain-openai>=0.2.2",
+    "langchain>=0.3.3",
+    "langchain-xai",
+    "python-dotenv>=1.0.1",
+    "msgspec>=0.18.6",
+    "langchain-postgres>=0.0.12",
+    "httpx[socks]>=0.27.2,<0.28.0",
+]
+
+[project.optional-dependencies]
+dev = ["mypy>=1.11.2", "ruff>=0.6.9"]
+
+[build-system]
+requires = ["setuptools>=75.1.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "retrieval_graph"
+]
+[tool.setuptools.package-dir]
+"retrieval_graph" = "src/retrieval_graph"
+
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[tool.ruff]
+lint.select = [
+    "E", # pycodestyle
+    "F", # pyflakes
+    "I", # isort
+    "D", # pydocstyle
+    "D401", # First line should be in imperative mood
+    "T201",
+    "UP",
+]
+lint.ignore = [
+    "UP006",
+    "UP007",
+    # We actually do want to import from typing_extensions
+    "UP035",
+    # Relax the convention by _not_ requiring documentation for every function parameter.
+    "D417",
+    "E501",
+]
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "UP"]
+[tool.ruff.lint.pydocstyle]
+convention = "google" # use Google docstring else we can use `rest`
