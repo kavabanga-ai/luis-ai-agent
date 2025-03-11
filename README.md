@@ -33,6 +33,8 @@ pip install "langgraph-cli[inmem]"
 # Verify installation
 langgraph --version
 
+# Install all Lib
+pip install -e .
 ```
 
 ## Running the Application
