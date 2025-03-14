@@ -1,7 +1,7 @@
 [project]
 name = "indikat-conversation"
 version = "0.0.2"
-description = "Conversation and Training Searver with langgraph"
+description = "AI Agent for vseopecheni"
 authors = [
     { name = "Shamsuddin Ahmed", email = "info@shamspias.com" },
 ]
@@ -28,11 +28,19 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = [
-    "retrieval_graph"
+    "retrieval_graph",
+    "summarization_graph",
+    "button_gen_graph",
+    "pop_up_graph",
+    "utils"
+
 ]
 [tool.setuptools.package-dir]
 "retrieval_graph" = "src/retrieval_graph"
-
+"summarization_graph" = "src/summarization_graph"
+"button_gen_graph" = "src/button_gen_graph"
+"pop_up_graph" = "src/pop_up_graph"
+"utils" = "src/utils"
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]
