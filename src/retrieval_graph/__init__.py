@@ -29,6 +29,5 @@ and individual component documentation within the retrieval_graph package.
 
 from retrieval_graph.graph import graph
 from retrieval_graph.index_graph import graph as index_graph
-from retrieval_graph.summarization_graph import graph as summarization_graph
 
-__all__ = ["graph", "index_graph", "summarization_graph"]
+__all__ = ["graph", "index_graph"]
