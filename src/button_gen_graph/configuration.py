@@ -7,7 +7,7 @@ from typing import Annotated, Any, Literal, Optional, Type, TypeVar
 
 from langchain_core.runnables import RunnableConfig, ensure_config
 
-from retrieval_graph import prompts
+from button_gen_graph import prompts
 
 T = TypeVar("T", bound="ButtonGenConfiguration")
 
