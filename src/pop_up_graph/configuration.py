@@ -82,11 +82,6 @@ class Configuration(IndexConfiguration):
         metadata={"description": "The system prompt used for generating responses."},
     )
 
-    check_for_retrieval_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_FOR_RETRIEVAL_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for check if retrieval need or not"},
-    )
-
     response_model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
         default="openai/gpt-4o",
         metadata={
