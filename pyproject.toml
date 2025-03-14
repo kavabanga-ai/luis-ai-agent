@@ -1,9 +1,10 @@
 [project]
-name = "indikat-conversation"
+name = "vseopecheni-ai-agent"
 version = "0.0.2"
 description = "AI Agent for vseopecheni"
 authors = [
-    { name = "Shamsuddin Ahmed", email = "info@shamspias.com" },
+    { name = "Nikita Подгорный", email = "nik@kavabanga.team" },
+    { name = "Shamsuddin Ahmed", email = "info@shamspias.com" }
 ]
 license = { text = "Indikat" }
 readme = "README.md"
