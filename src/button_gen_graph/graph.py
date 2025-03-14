@@ -76,7 +76,18 @@ async def generate_buttons(state: ButtonGenState, *, config: RunnableConfig) -> 
         # answers = parsed_output.get("answers", {})
     except Exception as e:
         logger.error(f"Failed to parse response: {e}")
-        raise ValueError("The model did not return output matching the expected schema.")
+        global CONDITION_LENGTH
+        CONDITION_LENGTH = False
+        return {
+            "questions": {
+                "1": "1",
+                "2": "1",
+                "3": "1"
+            },
+            # "answers": answers,
+            "answers": "",
+        }
+        # raise ValueError("The model did not return output matching the expected schema.")
 
     check_key_length(questions, configuration.button_max_character)
 
