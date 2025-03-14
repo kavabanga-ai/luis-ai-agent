@@ -1,6 +1,6 @@
 [project]
 name = "vseopecheni-ai-agent"
-version = "0.0.2"
+version = "1.0.0"
 description = "AI Agent for vseopecheni"
 authors = [
     { name = "Nikita Подгорный", email = "nik@kavabanga.team" },
