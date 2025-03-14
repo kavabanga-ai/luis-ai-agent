@@ -9,7 +9,7 @@ from langchain_core.runnables import RunnableConfig, ensure_config
 
 from retrieval_graph import prompts
 
-T = TypeVar("T", bound="ButtonGenConfiguration")
+T = TypeVar("T", bound="PopUpConfiguration")
 
 
 @dataclass(kw_only=True)
@@ -82,35 +82,10 @@ class Configuration(IndexConfiguration):
         metadata={"description": "The system prompt used for generating responses."},
     )
 
-    response_system_prompt_with_link: str = field(
-        default=prompts.RESPONSE_SYSTEM_PROMPT_WITH_LINK,
-        metadata={"description": "The system prompt used for generating responses need links."},
-    )
-
-    doctors_system_prompt_condition: Optional[str] = field(
-        default=prompts.APPOINTMENT_SYSTEM_PROMPT_CONDITION,
-        metadata={"description": "The system prompt used for generating responses. for appointment"},
-    )
-
-    doctors_system_prompt: Optional[str] = field(
-        default=prompts.APPOINTMENT_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for generating responses. for appointment"},
-    )
-
     check_for_retrieval_system_prompt: Optional[str] = field(
         default=prompts.CHECK_FOR_RETRIEVAL_SYSTEM_PROMPT,
         metadata={"description": "The system prompt used for check if retrieval need or not"},
     )
-
-    # medical_test_system_prompt_condition: Optional[str] = field(
-    #     default=prompts.MEDICAL_TEST_SYSTEM_PROMPT_CONDITION,
-    #     metadata={"description": "The system prompt used for generating responses. for appointment"},
-    # )
-    #
-    # medical_test_system_prompt: Optional[str] = field(
-    #     default=prompts.MEDICAL_TEST_SYSTEM_PROMPT,
-    #     metadata={"description": "The system prompt used for generating responses. for appointment"},
-    # )
 
     response_model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
         default="openai/gpt-4o",
@@ -133,104 +108,3 @@ class Configuration(IndexConfiguration):
                            "provider/model-name."
         },
     )
-
-    check_link_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_LINK_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for check it's link or not"},
-    )
-
-    check_same_url_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_SAME_URL_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for check it have same url or not"},
-    )
-
-    check_same_duplicate_url_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_SAME_DUPLICATE_URL_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for fix duplicate urls"},
-    )
-
-    reference_system_prompt: Optional[str] = field(
-        default=prompts.REFERENCE_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for give reference to the reponse"},
-    )
-
-
-@dataclass(kw_only=True)
-class SummarizationConfiguration:
-    """Configuration class for the summarization agent."""
-
-    user_id: str = field(metadata={"description": "Unique identifier for the user."})
-
-    summary_system_prompt: str = field(
-        default=prompts.SUMMARY_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for summarization."},
-    )
-
-    summary_system_prompt_utm: str = field(
-        default=prompts.SUMMARY_SYSTEM_PROMPT_UTM,
-        metadata={"description": "The system prompt used for summarization. with keywords"},
-    )
-
-    summary_model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
-        default="openai/gpt-4o",
-        metadata={
-            "description": "The language model used for summarization. Should be in the form: provider/model-name."
-        },
-    )
-
-    @classmethod
-    def from_runnable_config(
-            cls: Type[T], config: Optional[RunnableConfig] = None
-    ) -> T:
-        """Create a SummarizationConfiguration instance from a RunnableConfig object.
-
-        Args:
-            cls (Type[T]): The class itself.
-            config (Optional[RunnableConfig]): The configuration object to use.
-
-        Returns:
-            T: An instance of SummarizationConfiguration with the specified configuration.
-        """
-        config = ensure_config(config)
-        configurable = config.get("configurable") or {}
-        _fields = {f.name for f in fields(cls) if f.init}
-        return cls(**{k: v for k, v in configurable.items() if k in _fields})
-
-
-@dataclass(kw_only=True)
-class ButtonGenConfiguration:
-    """Configuration class for the button generation agent."""
-
-    user_id: str = field(metadata={"description": "Unique identifier for the user."})
-
-    button_gen_system_prompt: str = field(
-        default=prompts.BUTTON_GEN_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for button generation."},
-    )
-
-    button_gen_model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
-        default="openai/gpt-4",
-        metadata={
-            "description": "The language model used for button generation. Should be in the form: provider/model-name."
-        },
-    )
-
-    button_max_character: Optional[int] = field(
-        default=25,
-        metadata={"description": "Max button characters."},
-    )
-
-    @classmethod
-    def from_runnable_config(cls: Type[T], config: Optional[RunnableConfig] = None) -> T:
-        """Create a ButtonGenConfiguration instance from a RunnableConfig object.
-
-        Args:
-            config (Optional[RunnableConfig]): The configuration object to use.
-
-        Returns:
-            T: An instance of ButtonGenConfiguration with the specified configuration.
-        """
-        config = ensure_config(config)
-        configurable = config.get("configurable") or {}
-        _fields = {f.name for f in fields(cls) if f.init}
-        return cls(**{k: v for k, v in configurable.items() if k in _fields})
