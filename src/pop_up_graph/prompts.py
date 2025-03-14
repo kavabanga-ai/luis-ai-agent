@@ -13,6 +13,3 @@ QUERY_SYSTEM_PROMPT = """Generate search queries to retrieve documents that may 
 </previous_queries>
 
 System time: {system_time}"""
-
-CHECK_FOR_RETRIEVAL_SYSTEM_PROMPT = """Analyze the user's input to determine if it is a simple greeting (e.g., "hi,
-" "hello") or farewell Respond with 'yes' if it is, and 'no' if it is not."""
