@@ -4,12 +4,11 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph
 
-from retrieval_graph.configuration import ButtonGenConfiguration
-from retrieval_graph.state import ButtonGenInputState, ButtonGenState
+from button_gen_graph.configuration import ButtonGenConfiguration
+from button_gen_graph.state import ButtonGenInputState, ButtonGenState
 from retrieval_graph.utils import load_chat_model
 
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
-from pydantic import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +76,18 @@ async def generate_buttons(state: ButtonGenState, *, config: RunnableConfig) -> 
         # answers = parsed_output.get("answers", {})
     except Exception as e:
         logger.error(f"Failed to parse response: {e}")
-        raise ValueError("The model did not return output matching the expected schema.")
+        global CONDITION_LENGTH
+        CONDITION_LENGTH = False
+        return {
+            "questions": {
+                "1": "1",
+                "2": "1",
+                "3": "1"
+            },
+            # "answers": answers,
+            "answers": "",
+        }
+        # raise ValueError("The model did not return output matching the expected schema.")
 
     check_key_length(questions, configuration.button_max_character)
 

@@ -7,9 +7,9 @@ from typing import Annotated, Any, Literal, Optional, Type, TypeVar
 
 from langchain_core.runnables import RunnableConfig, ensure_config
 
-from retrieval_graph import prompts
+from pop_up_graph import prompts
 
-T = TypeVar("T", bound="IndexConfiguration")
+T = TypeVar("T", bound="PopUpConfiguration")
 
 
 @dataclass(kw_only=True)
@@ -82,36 +82,6 @@ class Configuration(IndexConfiguration):
         metadata={"description": "The system prompt used for generating responses."},
     )
 
-    response_system_prompt_with_link: str = field(
-        default=prompts.RESPONSE_SYSTEM_PROMPT_WITH_LINK,
-        metadata={"description": "The system prompt used for generating responses need links."},
-    )
-
-    doctors_system_prompt_condition: Optional[str] = field(
-        default=prompts.APPOINTMENT_SYSTEM_PROMPT_CONDITION,
-        metadata={"description": "The system prompt used for generating responses. for appointment"},
-    )
-
-    doctors_system_prompt: Optional[str] = field(
-        default=prompts.APPOINTMENT_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for generating responses. for appointment"},
-    )
-
-    check_for_retrieval_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_FOR_RETRIEVAL_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for check if retrieval need or not"},
-    )
-
-    # medical_test_system_prompt_condition: Optional[str] = field(
-    #     default=prompts.MEDICAL_TEST_SYSTEM_PROMPT_CONDITION,
-    #     metadata={"description": "The system prompt used for generating responses. for appointment"},
-    # )
-    #
-    # medical_test_system_prompt: Optional[str] = field(
-    #     default=prompts.MEDICAL_TEST_SYSTEM_PROMPT,
-    #     metadata={"description": "The system prompt used for generating responses. for appointment"},
-    # )
-
     response_model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
         default="openai/gpt-4o",
         metadata={
@@ -132,24 +102,4 @@ class Configuration(IndexConfiguration):
             "description": "The language model used for processing and refining queries. Should be in the form: "
                            "provider/model-name."
         },
-    )
-
-    check_link_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_LINK_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for check it's link or not"},
-    )
-
-    check_same_url_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_SAME_URL_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for check it have same url or not"},
-    )
-
-    check_same_duplicate_url_system_prompt: Optional[str] = field(
-        default=prompts.CHECK_SAME_DUPLICATE_URL_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for fix duplicate urls"},
-    )
-
-    reference_system_prompt: Optional[str] = field(
-        default=prompts.REFERENCE_SYSTEM_PROMPT,
-        metadata={"description": "The system prompt used for give reference to the reponse"},
     )

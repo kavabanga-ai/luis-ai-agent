@@ -16,9 +16,9 @@ from pydantic import BaseModel
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph
 
-from retrieval_graph import retrieval
-from retrieval_graph.configuration import Configuration
-from retrieval_graph.state import InputState, State
+from pop_up_graph import retrieval
+from pop_up_graph.configuration import Configuration
+from pop_up_graph.state import InputState, State
 from retrieval_graph.utils import format_docs, get_message_text, load_chat_model
 
 

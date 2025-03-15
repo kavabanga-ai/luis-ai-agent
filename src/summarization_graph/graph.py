@@ -11,8 +11,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph
 
-from retrieval_graph.configuration import SummarizationConfiguration
-from retrieval_graph.state import SummaryInputState, SummaryState
+from summarization_graph.configuration import SummarizationConfiguration
+from summarization_graph.state import SummaryInputState, SummaryState
 from retrieval_graph.utils import load_chat_model
 
 

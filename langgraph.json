@@ -5,9 +5,10 @@
   "graphs": {
     "indexer": "./src/retrieval_graph/index_graph.py:graph",
     "retrieval_graph": "./src/retrieval_graph/graph.py:graph",
-    "summarization_graph": "./src/retrieval_graph/summarization_graph.py:graph",
-    "button_gen_graph": "./src/retrieval_graph/button_gen_graph.py:graph",
-    "pop_up_graph": "./src/retrieval_graph/pop_up_graph.py:graph"
+    "summarization_graph": "./src/summarization_graph/graph.py:graph",
+    "button_gen_graph": "./src/button_gen_graph/graph.py:graph",
+    "pop_up_graph": "./src/pop_up_graph/graph.py:graph",
+    "no_nonsense_graph": "./src/no_nonsense_graph/graph.py:graph"
   },
   "env": ".env",
   "python_version": "3.11"
