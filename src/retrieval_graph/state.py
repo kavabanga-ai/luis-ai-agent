@@ -162,36 +162,3 @@ class State(InputState):
 
     # Feel free to add additional attributes to your state as needed.
     # Common examples include retrieved documents, extracted entities, API connections, etc.
-
-
-@dataclass(kw_only=True)
-class SummaryInputState:
-    """Represents the input state for the agent.
-
-    Includes messages and optionally article and keywords for summarization.
-    """
-    messages: Annotated[Sequence[AnyMessage], add_messages]
-    article: Optional[str] = None
-    keywords: Optional[Sequence[str]] = field(default_factory=list)
-
-
-@dataclass(kw_only=True)
-class SummaryState(SummaryInputState):
-    """The state of your graph / agent."""
-
-    queries: Annotated[list[str], add_queries] = field(default_factory=list)
-    retrieved_docs: list[Document] = field(default_factory=list)
-    summary: Optional[str] = None
-
-
-@dataclass(kw_only=True)
-class ButtonGenInputState:
-    """Input state for the button generation graph."""
-    article: Optional[str] = None
-
-
-@dataclass(kw_only=True)
-class ButtonGenState(ButtonGenInputState):
-    """State of the button generation graph."""
-    questions: Optional[dict[str, str]] = None
-    answers: Optional[dict[str, str]] = None
