@@ -41,6 +41,7 @@ packages = [
 "summarization_graph" = "src/summarization_graph"
 "button_gen_graph" = "src/button_gen_graph"
 "pop_up_graph" = "src/pop_up_graph"
+"no_nonsense_graph" = "src/no_nonsense_graph"
 "utils" = "src/utils"
 
 [tool.setuptools.package-data]
