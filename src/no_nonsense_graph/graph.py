@@ -1,158 +1,60 @@
-import logging
+from datetime import datetime, timezone
 
+try:
+    from typing_extensions import Any, Literal, TypedDict, cast
+except ImportError:
+    from typing import Any, Literal, TypedDict, cast
+
+from langchain_core.messages import BaseMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
-from langgraph.graph import StateGraph
+from langgraph.graph import END, START, StateGraph
 
-from no_nonsense_graph.configuration import ButtonGenConfiguration
-from no_nonsense_graph.state import State
-from retrieval_graph.utils import load_chat_model
-
-from langchain.output_parsers import StructuredOutputParser, ResponseSchema
-
-logger = logging.getLogger(__name__)
-
-CONDITION_LENGTH = False
-COUNT_RECURSION_LIMIT = 0
+from no_nonsense_graph.configuration import NoNonsenseConfiguration as Configuration
+from no_nonsense_graph.state import InputState, State
+from retrieval_graph.utils import format_docs, get_message_text, load_chat_model
 
 
-async def generate_buttons(state: State, *, config: RunnableConfig) -> dict[str, dict]:
-    """Generate buttons, questions, and answers based on the article.
+async def respond(
+        state: State, *, config: RunnableConfig
+) -> dict[str, list[BaseMessage]]:
+    """Call the LLM powering our "agent"."""
 
-    This function uses a language model to process the input article and generates
-    predefined buttons along with relevant questions and answers.
-
-    Args:
-        state (ButtonGenState): The current state containing the article.
-        config (RunnableConfig): Configuration for the button generation process.
-
-    Returns:
-        dict[str, dict]: A dictionary containing 'questions' and 'answers' dictionaries.
-    """
-    configuration = ButtonGenConfiguration.from_runnable_config(config)
-
-    # Define the expected output schema
-    response_schemas = [
-        ResponseSchema(name="questions", description="Dictionary of button names to questions."),
-        # ResponseSchema(name="answers", description="Dictionary of button names to answers."),
-    ]
-
-    output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
-
-    # Get the format instructions for the model
-    format_instructions = output_parser.get_format_instructions()
-
-    # Escape curly braces in format_instructions
-    escaped_format_instructions = format_instructions.replace("{", "{{").replace("}", "}}")
-
-    # Prepare the system message with format instructions using f-string
-    system_message = f"""{configuration.button_gen_system_prompt}"""
-
-    # Build the prompt
+    configuration = Configuration.from_runnable_config(config)
+    # Feel free to customize the prompt, model, and other logic!
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", system_message),
-            ("user", "{article}"),
-        ]
+            ("system", configuration.nonsense_identify_system_prompt),
+            ("placeholder", "{messages}")]
     )
 
-    model = load_chat_model(configuration.button_gen_model)
+    response_model_kwargs = config.get('configurable').get('response_model_kwargs')
 
-    prompt_values = {
-        "article": state.article,
-        "format_instructions": escaped_format_instructions,
-    }
+    model = load_chat_model(configuration.nonsense_identify_model, response_model_kwargs)
 
-    # Generate the message value
-    message_value = await prompt.ainvoke(prompt_values, config)
-
-    # Invoke the model
-    response_gen = await model.ainvoke(message_value, config)
-
-    # Parse the response
-    try:
-        parsed_output = output_parser.parse(response_gen.content)
-        questions = parsed_output.get("questions", {})
-        # answers = parsed_output.get("answers", {})
-    except Exception as e:
-        logger.error(f"Failed to parse response: {e}")
-        global CONDITION_LENGTH
-        CONDITION_LENGTH = False
-        return {
-            "questions": {
-                "1": "1",
-                "2": "1",
-                "3": "1"
-            },
-            # "answers": answers,
-            "answers": "",
-        }
-        # raise ValueError("The model did not return output matching the expected schema.")
-
-    check_key_length(questions, configuration.button_max_character)
-
-    global COUNT_RECURSION_LIMIT
-    COUNT_RECURSION_LIMIT += 1
-
-    # Update the state
-    return {
-        "questions": questions,
-        # "answers": answers,
-        "answers": "",
-    }
+    message_value = await prompt.ainvoke(
+        {
+            "messages": state.messages,
+            "system_time": datetime.now(tz=timezone.utc).isoformat(),
+        },
+        config,
+    )
+    response = await model.ainvoke(message_value, config)
+    # We return a list, because this will get added to the existing list
+    return {"messages": [response]}
 
 
-def check_key_length(dictionary, length):
-    """
-    Checks if all keys in the dictionary have more than the specified length.
-
-    Args:
-    dictionary (dict): The dictionary to check.
-    length (int): The character length to check against.
-    """
-    global CONDITION_LENGTH
-    CONDITION_LENGTH = all(len(key) < length for key in dictionary.keys())
+# Define a new graph (It's just a pipe)
 
 
-async def condition_button_length(state: State):
-    global CONDITION_LENGTH
-    global COUNT_RECURSION_LIMIT
-    if not CONDITION_LENGTH and COUNT_RECURSION_LIMIT < 23:
-        return "generate_buttons"
-    else:
-        return "response"
+builder = StateGraph(State, input=InputState, config_schema=Configuration)
 
+builder.add_node(respond)
+builder.add_edge(START, "respond")
+builder.add_edge("respond", END)
 
-def response(dictionary):
-    """
-    It response the final dict
-    """
-
-    return dictionary
-
-
-# Define the graph
-
-
-builder = StateGraph(
-    ButtonGenState,
-    input=ButtonGenInputState,
-    config_schema=ButtonGenConfiguration,
-)
-
-builder.add_node(generate_buttons)
-builder.add_node(response)
-builder.add_edge("__start__", "generate_buttons")
-
-builder.add_conditional_edges(
-    source="generate_buttons",
-    path=condition_button_length,
-    path_map={
-        "generate_buttons": "generate_buttons",
-        "response": "response"
-    }
-)
-
-# Compile the graph
+# Finally, we compile it!
+# This compiles it into a graph you can invoke and deploy.
+# Compile into a graph object that you can invoke and deploy.
 graph = builder.compile()
-graph.name = "ButtonGenGraph"
+graph.name = "NoNonsenseGraph"
